@@ -1,2 +1,2 @@
-# Games
-PromptWars deployment practice project
+# Space Jet Game
+Simple browser space shooter. Move with A/D or Left/Right. Lasers fire continuously. Destroy falling rocks to score. Three lives. Includes procedural star/galaxy background, smooth animation, particles, and local PNG jet/rock sprites. No external libraries.
