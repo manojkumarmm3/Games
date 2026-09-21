@@ -1,0 +1,433 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #03030c;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: #03030c;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* OVERLAYS & MENUS */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background: rgba(3, 3, 12, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.menu-card {
+    background: rgba(16, 24, 48, 0.95);
+    border: 2px solid #00f0ff;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    border-radius: 12px;
+    padding: 30px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+.menu-card.wide {
+    max-width: 650px;
+}
+
+.game-title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #00f0ff;
+    text-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
+    margin-bottom: 5px;
+}
+
+.game-subtitle {
+    font-size: 1rem;
+    color: #ff0077;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #00f0ff;
+    letter-spacing: 2px;
+}
+
+h2.danger {
+    color: #ff0055;
+    text-shadow: 0 0 10px rgba(255, 0, 85, 0.6);
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn {
+    background: linear-gradient(135deg, #152238, #0d1526);
+    color: #ffffff;
+    border: 1px solid #00f0ff;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 1px;
+}
+
+.btn:hover, .btn:active {
+    background: #00f0ff;
+    color: #000;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
+    transform: translateY(-2px);
+}
+
+.btn.primary {
+    background: linear-gradient(135deg, #00f0ff, #0077ff);
+    color: #000;
+    border: none;
+}
+
+.btn.primary:hover {
+    background: linear-gradient(135deg, #ff0077, #ff5500);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(255, 0, 119, 0.8);
+}
+
+.btn.small {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+.margin-top {
+    margin-top: 20px;
+}
+
+/* SETTINGS & INSTRUCTIONS */
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.btn.toggle {
+    width: 100px;
+    padding: 6px 0;
+}
+
+.instructions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.instr-section h3 {
+    color: #ff0077;
+    margin-bottom: 6px;
+    font-size: 1.1rem;
+}
+
+.instr-section p {
+    font-size: 0.9rem;
+    color: #cccccc;
+    margin-bottom: 4px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #000;
+    margin-right: 5px;
+}
+
+.badge.yellow { background: #ffe600; }
+.badge.blue { background: #00a2ff; }
+.badge.purple { background: #b700ff; }
+.badge.red { background: #ff2200; }
+.badge.cyan { background: #00ffff; }
+.badge.green { background: #00ff66; }
+.badge.gold { background: #ffaa00; }
+
+.stat-summary {
+    margin: 20px 0;
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-summary span {
+    color: #00f0ff;
+    font-weight: bold;
+}
+
+/* HUD */
+#hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+.hud-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hud-box {
+    background: rgba(10, 15, 30, 0.75);
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    padding: 6px 14px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hud-label {
+    font-size: 0.65rem;
+    color: #88aaff;
+    letter-spacing: 1px;
+}
+
+.hud-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #00f0ff;
+}
+
+.hud-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hud-stat {
+    background: rgba(10, 15, 30, 0.75);
+    border: 1px solid rgba(0, 240, 255, 0.4);
+    padding: 6px 12px;
+    border-radius: 6px;
+    pointer-events: auto;
+}
+
+.lives-display {
+    color: #ff0055;
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+}
+
+.health-bar-outer {
+    width: 100px;
+    height: 12px;
+    background: #222;
+    border: 1px solid #00f0ff;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 2px;
+}
+
+.health-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, #ff0055, #00ff66);
+    transition: width 0.2s ease;
+}
+
+.icon-btn {
+    background: transparent;
+    border: 1px solid #00f0ff;
+    color: #00f0ff;
+    font-size: 1.2rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* BOSS HUD */
+.hud-middle {
+    display: flex;
+    justify-content: center;
+}
+
+.boss-hud {
+    background: rgba(20, 5, 10, 0.85);
+    border: 2px solid #ff0055;
+    border-radius: 8px;
+    padding: 8px 16px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.5);
+}
+
+.boss-label {
+    color: #ff0055;
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+}
+
+.boss-bar-outer {
+    width: 100%;
+    height: 14px;
+    background: #200;
+    border: 1px solid #ff0055;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.boss-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, #ff5500, #ff0055);
+    transition: width 0.1s ease;
+}
+
+.boss-text {
+    font-size: 0.75rem;
+    color: #fff;
+    margin-top: 2px;
+    display: block;
+}
+
+/* POWERUP HUD */
+.powerup-display {
+    position: absolute;
+    top: 75px;
+    left: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.powerup-pill {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid #00f0ff;
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #00f0ff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* MOBILE CONTROLS OVERLAY */
+.mobile-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    z-index: 6;
+    pointer-events: none;
+}
+
+.mobile-dpad, .mobile-actions {
+    display: flex;
+    gap: 15px;
+    pointer-events: auto;
+}
+
+.touch-btn {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: rgba(0, 240, 255, 0.2);
+    border: 2px solid #00f0ff;
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.touch-btn:active {
+    background: rgba(0, 240, 255, 0.6);
+    transform: scale(0.95);
+}
+
+.fire-btn {
+    width: 75px;
+    height: 75px;
+    background: rgba(255, 0, 85, 0.3);
+    border-color: #ff0055;
+    color: #ff0055;
+    font-size: 0.9rem;
+}
+
+.fire-btn:active {
+    background: rgba(255, 0, 85, 0.7);
+    color: #fff;
+}
