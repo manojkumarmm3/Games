@@ -1,1 +1,181 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Space Jet</title><link rel="stylesheet" href="style.css"></head><body><canvas id="game"></canvas><div id="hud"><b>SPACE JET</b><span>SCORE <strong id="score">0</strong></span><span>ROCKS <strong id="rocks">0</strong></span><span>❤ <strong id="lives">3</strong></span><small>A/D or ←/→ · AUTO LASER FIRE</small></div><div id="over" class="hidden"><section><h1>MISSION FAILED</h1><p>Score: <b id="final">0</b></p><button id="restart">PLAY AGAIN</button></section></div><script src="script.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>GALAXY STRIKE - Space Shooter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- HUD -->
+        <div id="hud" class="hidden">
+            <div class="hud-top">
+                <div class="hud-box">
+                    <span class="hud-label">SCORE</span>
+                    <span id="scoreVal" class="hud-value">000000</span>
+                </div>
+                <div class="hud-box">
+                    <span class="hud-label">HIGH SCORE</span>
+                    <span id="highScoreVal" class="hud-value">000000</span>
+                </div>
+                <div class="hud-box">
+                    <span class="hud-label">LEVEL</span>
+                    <span id="levelVal" class="hud-value">1</span>
+                </div>
+            </div>
+
+            <div class="hud-middle">
+                <div id="bossContainer" class="boss-hud hidden">
+                    <div class="boss-label">BOSS WARNING</div>
+                    <div class="boss-bar-outer">
+                        <div id="bossHealthBar" class="boss-bar-inner" style="width: 100%;"></div>
+                    </div>
+                    <span id="bossHealthText" class="boss-text">100%</span>
+                </div>
+            </div>
+
+            <div class="hud-bottom">
+                <div class="hud-stat">
+                    <span class="hud-label">LIVES</span>
+                    <div id="livesContainer" class="lives-display">♥♥♥</div>
+                </div>
+                <div class="hud-stat">
+                    <span class="hud-label">HEALTH</span>
+                    <div class="health-bar-outer">
+                        <div id="healthBar" class="health-bar-inner" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="hud-stat">
+                    <button id="btnPauseGame" class="icon-btn">⏸</button>
+                </div>
+            </div>
+
+            <div id="powerupContainer" class="powerup-display"></div>
+        </div>
+
+        <!-- MAIN MENU -->
+        <div id="menuMain" class="overlay">
+            <div class="menu-card">
+                <h1 class="game-title">GALAXY STRIKE</h1>
+                <p class="game-subtitle">2D SPACE SHOOTER</p>
+                <div class="button-group">
+                    <button id="btnPlay" class="btn primary">PLAY</button>
+                    <button id="btnHowTo" class="btn">HOW TO PLAY</button>
+                    <button id="btnSettings" class="btn">SETTINGS</button>
+                    <button id="btnCredits" class="btn">CREDITS</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOW TO PLAY -->
+        <div id="menuHowTo" class="overlay hidden">
+            <div class="menu-card wide">
+                <h2>HOW TO PLAY</h2>
+                <div class="instructions-grid">
+                    <div class="instr-section">
+                        <h3>DESKTOP CONTROLS</h3>
+                        <p><strong>Move Left:</strong> A / Left Arrow / Mouse</p>
+                        <p><strong>Move Right:</strong> D / Right Arrow / Mouse</p>
+                        <p><strong>Shoot:</strong> Spacebar / Mouse Click</p>
+                        <p><strong>Pause:</strong> P / ESC</p>
+                    </div>
+                    <div class="instr-section">
+                        <h3>MOBILE CONTROLS</h3>
+                        <p>Touch & Drag ship horizontally, or use on-screen Left/Right/Fire touch controls.</p>
+                    </div>
+                    <div class="instr-section">
+                        <h3>POWER-UPS</h3>
+                        <p><span class="badge yellow">Fast Fire</span> Increased attack speed</p>
+                        <p><span class="badge blue">Double Fire</span> Twin laser cannons</p>
+                        <p><span class="badge purple">Big Fire</span> Heavy plasma blast</p>
+                        <p><span class="badge red">Rapid Fire</span> Ultra-fast firing rate</p>
+                        <p><span class="badge cyan">Shield</span> Absorbs collision damage</p>
+                        <p><span class="badge green">Extra Life</span> +1 Life unit</p>
+                        <p><span class="badge gold">Score Boost</span> Double score multiplier</p>
+                    </div>
+                </div>
+                <button id="btnBackFromHowTo" class="btn small margin-top">BACK</button>
+            </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="menuSettings" class="overlay hidden">
+            <div class="menu-card">
+                <h2>SETTINGS</h2>
+                <div class="setting-item">
+                    <span>Sound Effects</span>
+                    <button id="toggleSound" class="btn toggle">ON</button>
+                </div>
+                <div class="setting-item">
+                    <span>Music</span>
+                    <button id="toggleMusic" class="btn toggle">ON</button>
+                </div>
+                <div class="setting-item">
+                    <span>Screen Shake</span>
+                    <button id="toggleShake" class="btn toggle">ON</button>
+                </div>
+                <div class="setting-item">
+                    <span>Difficulty</span>
+                    <button id="toggleDiff" class="btn toggle">NORMAL</button>
+                </div>
+                <button id="btnBackFromSettings" class="btn small margin-top">BACK</button>
+            </div>
+        </div>
+
+        <!-- CREDITS -->
+        <div id="menuCredits" class="overlay hidden">
+            <div class="menu-card">
+                <h2>CREDITS</h2>
+                <p class="credit-title">GALAXY STRIKE</p>
+                <p>Designed & Developed with Canvas, Web Audio API & Pure JS.</p>
+                <p>Special thanks to all space shooter arcade classics!</p>
+                <button id="btnBackFromCredits" class="btn small margin-top">BACK</button>
+            </div>
+        </div>
+
+        <!-- PAUSE MENU -->
+        <div id="menuPause" class="overlay hidden">
+            <div class="menu-card">
+                <h2>PAUSED</h2>
+                <div class="button-group">
+                    <button id="btnResume" class="btn primary">RESUME</button>
+                    <button id="btnRestartPause" class="btn">RESTART</button>
+                    <button id="btnMainMenuPause" class="btn">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME OVER -->
+        <div id="menuGameOver" class="overlay hidden">
+            <div class="menu-card">
+                <h2 class="danger">GAME OVER</h2>
+                <div class="stat-summary">
+                    <p>FINAL SCORE: <span id="finalScoreVal">0</span></p>
+                    <p>HIGH SCORE: <span id="finalHighScoreVal">0</span></p>
+                    <p>LEVEL REACHED: <span id="finalLevelVal">1</span></p>
+                </div>
+                <div class="button-group">
+                    <button id="btnPlayAgain" class="btn primary">PLAY AGAIN</button>
+                    <button id="btnMainMenuGO" class="btn">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOBILE CONTROLS OVERLAY -->
+        <div id="mobileControls" class="mobile-overlay hidden">
+            <div class="mobile-dpad">
+                <button id="btnMobileLeft" class="touch-btn">◄</button>
+                <button id="btnMobileRight" class="touch-btn">►</button>
+            </div>
+            <div class="mobile-actions">
+                <button id="btnMobileFire" class="touch-btn fire-btn">FIRE</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
